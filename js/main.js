@@ -43,44 +43,31 @@ const getRandomCoordinate = (a, b, signs = 1) => {
 };
 const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
 
-getRandomNumber(1, 5);
-getRandomCoordinate(1, 2, 6);
-
-const randomAvatarNumber = `0${getRandomNumber(1, 10)}`.slice(-2);
-
-const createAuthor = () => ({
-  avatar : `img/avatars/user${randomAvatarNumber}.png`,
-});
-
-const createOffer = (location) => ({
-  title : 'Апартаменты',
-  address : `${location.lat}, ${location.lng}`,
-  price : getRandomNumber(1, 100000),
-  type : getRandomArrayElement(TYPE_OF_HOUSE),
-  rooms : getRandomNumber(1, 15),
-  guests : getRandomNumber(1, 30),
-  checkin : getRandomArrayElement(TIME_IN_OUT),
-  checkout : getRandomArrayElement(TIME_IN_OUT),
-  features : getRandomArrayElement(HOUSE_FEATURES),
-  description : 'Апартаменты для всех и каждого!',
-  photos : getRandomArrayElement(PHOTO_OF_HOUSE),
-});
-
-const createLocation = () => ({
-  lat: getRandomCoordinate(35.65, 35.7, 5),
-  lng: getRandomCoordinate(139.7, 139.8, 5),
-});
-
-const createAdvert = () => {
-  const location = createLocation();
+const createAdvert = (index) => {
+  const lat = getRandomCoordinate(35.65, 35.7, 5);
+  const lng = getRandomCoordinate(139.7, 139.8, 5);
   return {
-    author : createAuthor(),
-    offer : createOffer(location),
-    location: createLocation(),
+    author: `img/avatars/user${index.toString().padStart(2, '0')}.png`,
+    offer: {
+      title: 'Апартаменты',
+      address: `${lat}, ${lng}`,
+      price: getRandomNumber(1, 100000),
+      type: getRandomArrayElement(TYPE_OF_HOUSE),
+      rooms: getRandomNumber(1, 15),
+      guests: getRandomNumber(1, 30),
+      checkin: getRandomArrayElement(TIME_IN_OUT),
+      checkout: getRandomArrayElement(TIME_IN_OUT),
+      features: getRandomArrayElement(HOUSE_FEATURES),
+      description: 'Апартаменты для всех и каждого!',
+      photos: getRandomArrayElement(PHOTO_OF_HOUSE),
+    },
+    location: {
+      lat,
+      lng,
+    },
   };
 };
 
-const listAd = Array.from({length: SIMILAR_ADV}, createAdvert);
+const listAd = (count) => Array.from({length: count}, (element , index) => createAdvert(index + 1));
 
-// eslint-disable-next-line no-console
-console.log(listAd);
+listAd(SIMILAR_ADV);
