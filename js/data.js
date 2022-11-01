@@ -51,6 +51,4 @@ const createAdvert = (index) => {
   };
 };
 
-const listAd = (count) => Array.from({length: count}, (element, index) => createAdvert(index + 1));
-
-export {listAd};
+export const listAd = (count) => Array.from({length: count}, (element, index) => createAdvert(index + 1));
