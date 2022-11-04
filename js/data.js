@@ -26,6 +26,8 @@ const PHOTO_OF_HOUSE = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
 ];
 
+const SIMILAR_ADV = 10;
+
 const createAdvert = (index) => {
   const lat = getRandomCoordinate(35.65, 35.7, 5);
   const lng = getRandomCoordinate(139.7, 139.8, 5);
@@ -34,7 +36,7 @@ const createAdvert = (index) => {
     offer: {
       title: 'Апартаменты',
       address: `${lat}, ${lng}`,
-      price: getRandomNumber(1, 100000),
+      price: getRandomNumber(1000, 100000),
       type: getRandomArrayElement(TYPE_OF_HOUSE),
       rooms: getRandomNumber(1, 15),
       guests: getRandomNumber(1, 30),
@@ -51,4 +53,4 @@ const createAdvert = (index) => {
   };
 };
 
-export const listAd = (count) => Array.from({length: count}, (element, index) => createAdvert(index + 1));
+export const listAd = () => Array.from({length: SIMILAR_ADV}, (element, index) => createAdvert(index + 1));
