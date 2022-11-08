@@ -3,21 +3,29 @@ const filtersFormElements = filtersForm.children;
 const form = document.querySelector('.ad-form');
 const formElements = form.children;
 
-const formDisabled = () => {
+const disableForm = () => {
   filtersForm.classList.toggle('ad-form--disabled');
-  formElements.disabled = true;
+  for (const formElement of formElements) {
+    formElement.disabled = true;
+  }
 
   form.classList.toggle('ad-form--disabled');
-  filtersFormElements.disabled = true;
+  for (const filtersFormElement of filtersFormElements) {
+    filtersFormElement.disabled = true;
+  }
 };
 
-const formActive = () => {
+const enableForm = () => {
   filtersForm.classList.toggle('ad-form--disabled');
-  formElements.disabled = false;
+  for (const formElement of formElements) {
+    formElement.disabled = false;
+  }
 
   form.classList.toggle('ad-form--disabled');
-  filtersFormElements.disabled = false;
+  for (const filtersFormElement of filtersFormElements) {
+    filtersFormElement.disabled = false;
+  }
 };
 
-formDisabled();
-formActive();
+disableForm();
+enableForm();
