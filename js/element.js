@@ -7,10 +7,8 @@ const HOUSE_TYPE = {
   palace: 'Дворец',
   hotel: 'Отель'
 };
-const similarAdvertisements = listAd();
 const map = document.querySelector('#map-canvas');
 const advertisementTemplate = document.querySelector('#card').content.querySelector('.popup');
-const similarAdvertisementsFragment = document.createDocumentFragment();
 
 const createAdElement = ((ad) => {
   const adElement = advertisementTemplate.cloneNode(true);
@@ -38,14 +36,15 @@ const createAdElement = ((ad) => {
 });
 
 
-const adRender = () => {
+const adRender = (ads = listAd()) => {
+  const adsFragment = document.createDocumentFragment();
   map.innerHTML = '';
 
-  similarAdvertisements.forEach((ad) => {
-    similarAdvertisementsFragment.appendChild(createAdElement(ad));
+  ads.forEach((ad) => {
+    adsFragment.appendChild(createAdElement(ad));
   });
 
-  map.appendChild(similarAdvertisementsFragment);
+  map.appendChild(adsFragment);
 };
 
 adRender();
