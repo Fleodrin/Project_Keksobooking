@@ -17,11 +17,13 @@ const disableForm = () => {
 
 const enableForm = () => {
   filtersForm.classList.toggle('ad-form--disabled');
+
   for (const formElement of formElements) {
     formElement.disabled = false;
   }
 
   form.classList.toggle('ad-form--disabled');
+
   for (const filtersFormElement of filtersFormElements) {
     filtersFormElement.disabled = false;
   }
