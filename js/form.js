@@ -1,3 +1,5 @@
+import {slider} from './slider.js';
+
 const HOUSE_TYPE = {
   flat: 1000,
   bungalow: 0,
@@ -55,7 +57,15 @@ pristine.addValidator(
   'Неверное количество комнат'
 );
 
-fieldType.addEventListener('change', () => pristine.validate(fieldPrice));
+fieldType.addEventListener('change', () => {
+  fieldPrice.placeholder = HOUSE_TYPE[fieldType.value];
+  pristine.validate(fieldPrice);
+});
+
+slider.noUiSlider.on('update', () => {
+  fieldPrice.value = slider.noUiSlider.get();
+  pristine.validate(fieldPrice);
+});
 
 fieldGuestNumber.addEventListener('change', () => pristine.validate(fieldRoomNumber));
 

@@ -1,5 +1,3 @@
-import {listAd} from './data.js';
-
 const HOUSE_TYPE = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
@@ -7,7 +5,6 @@ const HOUSE_TYPE = {
   palace: 'Дворец',
   hotel: 'Отель'
 };
-const map = document.querySelector('#map-canvas');
 const advertisementTemplate = document.querySelector('#card').content.querySelector('.popup');
 
 const createAdElement = ((ad) => {
@@ -35,16 +32,4 @@ const createAdElement = ((ad) => {
   return adElement;
 });
 
-
-const adRender = (ads = listAd()) => {
-  const adsFragment = document.createDocumentFragment();
-  map.innerHTML = '';
-
-  ads.forEach((ad) => {
-    adsFragment.appendChild(createAdElement(ad));
-  });
-
-  map.appendChild(adsFragment);
-};
-
-adRender();
+export {createAdElement};

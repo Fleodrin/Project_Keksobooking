@@ -30,4 +30,5 @@ const enableForm = () => {
 };
 
 disableForm();
-enableForm();
+
+export {enableForm};
