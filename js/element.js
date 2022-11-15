@@ -7,7 +7,7 @@ const HOUSE_TYPE = {
 };
 const advertisementTemplate = document.querySelector('#card').content.querySelector('.popup');
 
-const createAdElement = ((ad) => {
+export const createAdElement = ((ad) => {
   const adElement = advertisementTemplate.cloneNode(true);
   adElement.querySelector('.popup__avatar').src = ad.author;
   adElement.querySelector('.popup__title').textContent = ad.offer.title;
@@ -31,5 +31,3 @@ const createAdElement = ((ad) => {
 
   return adElement;
 });
-
-export {createAdElement};

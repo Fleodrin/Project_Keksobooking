@@ -1,11 +1,8 @@
 import {enableForm} from './toggle-status.js';
 import {listAd} from './data.js';
 import {createAdElement} from './element.js';
+import {BASIC_POSITION, setAddressValue} from './form.js';
 
-const BASIC_POSITION = {
-  lat: 35.68172,
-  lng: 139.75392,
-};
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
   iconSize: [52, 52],
@@ -16,8 +13,6 @@ const pinIcon = L.icon({
   iconSize: [40, 40],
   iconAnchor: [20, 40],
 });
-
-export {BASIC_POSITION};
 
 const map = L.map('map-canvas')
   .on('load', () => {
@@ -40,27 +35,30 @@ const mainMarker = L.marker(
   },
 );
 
+mainMarker.on('moveend', (evt) => {
+  setAddressValue(evt.target.getLatLng().lat.toFixed(5), evt.target.getLatLng().lng.toFixed(5));
+});
+
 mainMarker.addTo(map);
 
-const resetMap = () => {
+export const resetMap = () => {
   mainMarker.setLatLng(BASIC_POSITION);
   map.setView(BASIC_POSITION, 12);
 };
 
-export {mainMarker, resetMap};
+const createMarker = (point) => L.marker(
+  {
+    lat: point.location.lat,
+    lng: point.location.lng,
+  },
+  {
+    icon: pinIcon,
+  },
+);
 
 const createMarkers = (points = listAd()) => {
   points.forEach((point) => {
-    const marker = L.marker(
-      {
-        lat: point.location.lat,
-        lng: point.location.lng,
-      },
-      {
-        icon: pinIcon,
-      },
-    );
-    marker
+    createMarker(point)
       .addTo(map)
       .bindPopup(createAdElement(point));
   });

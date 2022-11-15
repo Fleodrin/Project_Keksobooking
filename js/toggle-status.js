@@ -15,7 +15,7 @@ const disableForm = () => {
   }
 };
 
-const enableForm = () => {
+export const enableForm = () => {
   filtersForm.classList.toggle('ad-form--disabled');
 
   for (const formElement of formElements) {
@@ -28,7 +28,5 @@ const enableForm = () => {
     filtersFormElement.disabled = false;
   }
 };
-
-export {enableForm};
 
 disableForm();
