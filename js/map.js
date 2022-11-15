@@ -6,9 +6,6 @@ const BASIC_POSITION = {
   lat: 35.68172,
   lng: 139.75392,
 };
-const points = listAd();
-const resetButton = document.querySelector('.ad-form__reset');
-const addressField = document.querySelector('#address');
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
   iconSize: [52, 52],
@@ -20,7 +17,7 @@ const pinIcon = L.icon({
   iconAnchor: [20, 40],
 });
 
-addressField.value = `${BASIC_POSITION.lat} ${BASIC_POSITION.lng}`;
+export {BASIC_POSITION};
 
 const map = L.map('map-canvas')
   .on('load', () => {
@@ -45,27 +42,28 @@ const mainMarker = L.marker(
 
 mainMarker.addTo(map);
 
-mainMarker.on('moveend', (evt) => {
-  addressField.value = `${evt.target.getLatLng().lat.toFixed(5)} ${evt.target.getLatLng().lng.toFixed(5)}`;
-});
-
-resetButton.addEventListener('click', () => {
+const resetMap = () => {
   mainMarker.setLatLng(BASIC_POSITION);
-
   map.setView(BASIC_POSITION, 12);
-});
+};
 
-points.forEach((point) => {
-  const marker = L.marker(
-    {
-      lat: point.location.lat,
-      lng: point.location.lng,
-    },
-    {
-      icon: pinIcon,
-    },
-  );
-  marker
-    .addTo(map)
-    .bindPopup(createAdElement(point));
-});
+export {mainMarker, resetMap};
+
+const createMarkers = (points = listAd()) => {
+  points.forEach((point) => {
+    const marker = L.marker(
+      {
+        lat: point.location.lat,
+        lng: point.location.lng,
+      },
+      {
+        icon: pinIcon,
+      },
+    );
+    marker
+      .addTo(map)
+      .bindPopup(createAdElement(point));
+  });
+};
+
+createMarkers();

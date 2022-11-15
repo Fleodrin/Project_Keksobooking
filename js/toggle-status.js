@@ -29,6 +29,6 @@ const enableForm = () => {
   }
 };
 
-disableForm();
-
 export {enableForm};
+
+disableForm();

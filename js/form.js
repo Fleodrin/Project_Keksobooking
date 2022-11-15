@@ -1,4 +1,5 @@
-import {slider} from './slider.js';
+import {BASIC_POSITION} from './map.js';
+import {mainMarker, resetMap} from './map.js';
 
 const HOUSE_TYPE = {
   flat: 1000,
@@ -15,6 +16,9 @@ const fieldPrice = form.querySelector('#price');
 const fieldType = form.querySelector('#type');
 const fieldRoomNumber = form.querySelector('#room_number');
 const fieldGuestNumber = form.querySelector('#capacity');
+const slider = form.querySelector('.ad-form__slider');
+const resetButton = form.querySelector('.ad-form__reset');
+const addressField = form.querySelector('#address');
 
 const pristine = new Pristine(form, {
   classTo: 'ad-form__element',
@@ -24,6 +28,28 @@ const pristine = new Pristine(form, {
   errorTextTag: 'span',
   errorTextClass: 'ad-form__element--invalid'
 });
+
+noUiSlider.create(slider, {
+  range: {
+    min: 0,
+    max: 100000,
+  },
+  start: 1000,
+  step: 100,
+  connect: 'lower',
+  format: {
+    to: function (value) {
+      return value.toFixed(0);
+    },
+    from: function (value) {
+      return parseFloat(value);
+    },
+  },
+});
+
+const setAddressValue = () => {
+  addressField.value = `${BASIC_POSITION.lat} ${BASIC_POSITION.lng}`;
+};
 
 const validateTitle = (value) => value.length >= MIN_TITLE_LENGTH && value.length <= MAX_TITLE_LENGTH;
 
@@ -38,6 +64,12 @@ const validateRoomNumber = () => {
     return true;
   }
 };
+
+mainMarker.on('moveend', (evt) => {
+  addressField.value = `${evt.target.getLatLng().lat.toFixed(5)} ${evt.target.getLatLng().lng.toFixed(5)}`;
+});
+
+setAddressValue();
 
 pristine.addValidator(
   form.querySelector('#title'),
@@ -65,6 +97,10 @@ fieldType.addEventListener('change', () => {
 slider.noUiSlider.on('update', () => {
   fieldPrice.value = slider.noUiSlider.get();
   pristine.validate(fieldPrice);
+});
+
+resetButton.addEventListener('click', () => {
+  resetMap();
 });
 
 fieldGuestNumber.addEventListener('change', () => pristine.validate(fieldRoomNumber));
