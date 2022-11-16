@@ -16,15 +16,11 @@ const MAX_TITLE_LENGTH = 100;
 const SLIDER_PRICE_START = 1000;
 
 const form = document.querySelector('.ad-form');
-const fieldTitle = form.querySelector('#title');
 const fieldPrice = form.querySelector('#price');
 const fieldType = form.querySelector('#type');
 const fieldRoomNumber = form.querySelector('#room_number');
 const fieldGuestNumber = form.querySelector('#capacity');
 const slider = form.querySelector('.ad-form__slider');
-const fieldTimein = form.querySelector('#timein');
-const fieldTimeout = form.querySelector('#timeout');
-const fieldDescription = form.querySelector('#description');
 const resetButton = form.querySelector('.ad-form__reset');
 const addressField = form.querySelector('#address');
 
@@ -58,8 +54,6 @@ noUiSlider.create(slider, {
 export const setAddressValue = (lat, lng) => {
   addressField.value = `${lat} ${lng}`;
 };
-
-setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
 
 const validateTitle = (value) => value.length >= MIN_TITLE_LENGTH && value.length <= MAX_TITLE_LENGTH;
 
@@ -106,15 +100,11 @@ slider.noUiSlider.on('update', () => {
 resetButton.addEventListener('click', (evt) => {
   evt.preventDefault();
   resetMap();
-  fieldTitle.value = '';
+  form.reset();
   setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
-  fieldPrice.value = SLIDER_PRICE_START;
-  fieldType.value = 'flat';
-  fieldTimein.value = '12:00';
-  fieldTimeout.value = '12:00';
-  fieldRoomNumber.value = '1';
-  fieldGuestNumber.value = '3';
-  fieldDescription.value = '';
+  slider.noUiSlider.updateOptions({
+    start: SLIDER_PRICE_START,
+  });
 });
 
 fieldGuestNumber.addEventListener('change', () => pristine.validate(fieldRoomNumber));

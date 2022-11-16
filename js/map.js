@@ -17,6 +17,7 @@ const pinIcon = L.icon({
 const map = L.map('map-canvas')
   .on('load', () => {
     enableForm();
+    setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
   })
   .setView(BASIC_POSITION, 12);
 
