@@ -1,3 +1,9 @@
+import {resetMap} from './map.js';
+
+export const BASIC_POSITION = {
+  lat: 35.68172,
+  lng: 139.75392,
+};
 const HOUSE_TYPE = {
   flat: 1000,
   bungalow: 0,
@@ -7,12 +13,20 @@ const HOUSE_TYPE = {
 };
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
+const SLIDER_PRICE_START = 1000;
 
 const form = document.querySelector('.ad-form');
+const fieldTitle = form.querySelector('#title');
 const fieldPrice = form.querySelector('#price');
 const fieldType = form.querySelector('#type');
 const fieldRoomNumber = form.querySelector('#room_number');
 const fieldGuestNumber = form.querySelector('#capacity');
+const slider = form.querySelector('.ad-form__slider');
+const fieldTimein = form.querySelector('#timein');
+const fieldTimeout = form.querySelector('#timeout');
+const fieldDescription = form.querySelector('#description');
+const resetButton = form.querySelector('.ad-form__reset');
+const addressField = form.querySelector('#address');
 
 const pristine = new Pristine(form, {
   classTo: 'ad-form__element',
@@ -22,6 +36,30 @@ const pristine = new Pristine(form, {
   errorTextTag: 'span',
   errorTextClass: 'ad-form__element--invalid'
 });
+
+noUiSlider.create(slider, {
+  range: {
+    min: 0,
+    max: 100000,
+  },
+  start: SLIDER_PRICE_START,
+  step: 100,
+  connect: 'lower',
+  format: {
+    to(value) {
+      return value.toFixed(0);
+    },
+    from(value) {
+      return parseFloat(value);
+    },
+  },
+});
+
+export const setAddressValue = (lat, lng) => {
+  addressField.value = `${lat} ${lng}`;
+};
+
+setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
 
 const validateTitle = (value) => value.length >= MIN_TITLE_LENGTH && value.length <= MAX_TITLE_LENGTH;
 
@@ -55,7 +93,29 @@ pristine.addValidator(
   'Неверное количество комнат'
 );
 
-fieldType.addEventListener('change', () => pristine.validate(fieldPrice));
+fieldType.addEventListener('change', () => {
+  fieldPrice.placeholder = HOUSE_TYPE[fieldType.value];
+  pristine.validate(fieldPrice);
+});
+
+slider.noUiSlider.on('update', () => {
+  fieldPrice.value = slider.noUiSlider.get();
+  pristine.validate(fieldPrice);
+});
+
+resetButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  resetMap();
+  fieldTitle.value = '';
+  setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
+  fieldPrice.value = SLIDER_PRICE_START;
+  fieldType.value = 'flat';
+  fieldTimein.value = '12:00';
+  fieldTimeout.value = '12:00';
+  fieldRoomNumber.value = '1';
+  fieldGuestNumber.value = '3';
+  fieldDescription.value = '';
+});
 
 fieldGuestNumber.addEventListener('change', () => pristine.validate(fieldRoomNumber));
 
