@@ -22,7 +22,7 @@ const fieldRoomNumber = form.querySelector('#room_number');
 const fieldGuestNumber = form.querySelector('#capacity');
 const slider = form.querySelector('.ad-form__slider');
 const resetButton = form.querySelector('.ad-form__reset');
-const addressField = form.querySelector('#address');
+const fieldAddress = form.querySelector('#address');
 
 const pristine = new Pristine(form, {
   classTo: 'ad-form__element',
@@ -52,7 +52,7 @@ noUiSlider.create(slider, {
 });
 
 export const setAddressValue = (lat, lng) => {
-  addressField.value = `${lat} ${lng}`;
+  fieldAddress.value = `${lat} ${lng}`;
 };
 
 const validateTitle = (value) => value.length >= MIN_TITLE_LENGTH && value.length <= MAX_TITLE_LENGTH;
@@ -92,7 +92,11 @@ fieldType.addEventListener('change', () => {
   pristine.validate(fieldPrice);
 });
 
-slider.noUiSlider.on('update', () => {
+fieldPrice.addEventListener('input', () => {
+  slider.noUiSlider.set(fieldPrice.value);
+});
+
+slider.noUiSlider.on('slide', () => {
   fieldPrice.value = slider.noUiSlider.get();
   pristine.validate(fieldPrice);
 });

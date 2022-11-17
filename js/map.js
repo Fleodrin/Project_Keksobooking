@@ -1,5 +1,5 @@
 import {enableForm} from './toggle-status.js';
-import {listAd} from './data.js';
+import {getData} from './api.js';
 import {createAdElement} from './element.js';
 import {BASIC_POSITION, setAddressValue} from './form.js';
 
@@ -57,11 +57,13 @@ const createMarker = (point) => L.marker(
   },
 );
 
-const createMarkers = (points = listAd()) => {
-  points.forEach((point) => {
-    createMarker(point)
-      .addTo(map)
-      .bindPopup(createAdElement(point));
+const createMarkers = () => {
+  getData((points) => {
+    points.slice(0, 10).forEach((point) => {
+      createMarker(point)
+        .addTo(map)
+        .bindPopup(createAdElement(point));
+    });
   });
 };
 
