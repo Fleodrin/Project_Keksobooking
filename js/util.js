@@ -1,22 +1,73 @@
-const getRandomNumber = (min, max) => {
-  if (min < 0 || max < min) {
-    return NaN;
-  }
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+const ALERT_TIME = 5000;
+
+const alertContainer = document.createElement('div');
+
+const successMessageTemplate = document.querySelector('#success')
+  .content.querySelector('.success');
+const errorMessageTemplate = document.querySelector('#error')
+  .content.querySelector('.error');
+const successMessage = successMessageTemplate.cloneNode(true);
+const errorMessage = errorMessageTemplate.cloneNode(true);
+
+const createAlert = (message) => {
+  alertContainer.style.zIndex = '1';
+  alertContainer.style.position = 'fixed';
+  alertContainer.style.left = '0';
+  alertContainer.style.top = '0';
+  alertContainer.style.right = '0';
+  alertContainer.style.padding = '10px 3px';
+  alertContainer.style.fontSize = '30px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.color = 'red';
+  alertContainer.style.backgroundColor = '#f0f0ea';
+
+  alertContainer.textContent = message;
+
+  document.body.append(alertContainer);
 };
 
-const getRandomCoordinate = (a, b, signs = 1) => {
-  if (a < 0 || b < 0 || signs <= 0) {
-    return NaN;
-  }
-
-  const lower = Math.min(a, b);
-  const upper = Math.max(a, b);
-  return ((Math.random() * (upper - lower)) + lower).toFixed(signs);
+const onSuccessClick = () => {
+  successMessage.remove();
+  successMessage.removeEventListener('click', onSuccessClick);
+  document.removeEventListener('keydown', onSuccessPush);
 };
 
-const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
+const onErrorClick = () => {
+  errorMessage.remove();
+  errorMessage.removeEventListener('click', onErrorClick);
+  document.removeEventListener('keydown', onErrorPush);
+};
 
-export {getRandomNumber, getRandomCoordinate, getRandomArrayElement};
+export const showSuccess = () => {
+  document.body.append(successMessage);
+  successMessage.addEventListener('click', onSuccessClick);
+  document.addEventListener('keydown', onSuccessPush);
+};
+
+export const showError = () => {
+  document.body.append(errorMessage);
+  errorMessage.addEventListener('click', onErrorClick);
+  document.addEventListener('keydown', onErrorPush);
+};
+
+export const showAlert = (message) => {
+  createAlert(message);
+
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_TIME);
+};
+
+function onSuccessPush(evt) {
+  if (evt.key === 'Escape') {
+    evt.preventDefault();
+    onSuccessClick();
+  }
+}
+
+function onErrorPush(evt) {
+  if (evt.key === 'Escape') {
+    evt.preventDefault();
+    onErrorClick();
+  }
+}

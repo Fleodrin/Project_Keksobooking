@@ -1,4 +1,6 @@
 import {resetMap} from './map.js';
+import {sendData} from './api.js';
+import {showSuccess, showError} from './util.js';
 
 export const BASIC_POSITION = {
   lat: 35.68172,
@@ -21,6 +23,7 @@ const fieldType = form.querySelector('#type');
 const fieldRoomNumber = form.querySelector('#room_number');
 const fieldGuestNumber = form.querySelector('#capacity');
 const slider = form.querySelector('.ad-form__slider');
+const submitButton = form.querySelector('.ad-form__submit');
 const resetButton = form.querySelector('.ad-form__reset');
 const fieldAddress = form.querySelector('#address');
 
@@ -116,4 +119,38 @@ fieldGuestNumber.addEventListener('change', () => pristine.validate(fieldRoomNum
 form.addEventListener('submit', (evt) => {
   evt.preventDefault();
   pristine.validate();
+});
+
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Отправляю...';
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
+
+form.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  if (pristine.validate()) {
+    blockSubmitButton();
+    sendData(
+      () => {
+        resetMap();
+        form.reset();
+        setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
+        slider.noUiSlider.updateOptions({
+          start: SLIDER_PRICE_START,
+        });
+        showSuccess();
+        unblockSubmitButton();
+      },
+      () => {
+        showError();
+        unblockSubmitButton();
+      },
+      new FormData(evt.target),
+    );
+  }
 });
