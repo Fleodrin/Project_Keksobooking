@@ -2,6 +2,7 @@ import {enableForm} from './toggle-status.js';
 import {getData} from './api.js';
 import {createAdElement} from './element.js';
 import {BASIC_POSITION, setAddressValue} from './form.js';
+import {filterForm} from './filter.js';
 
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
@@ -27,6 +28,8 @@ L.tileLayer(
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   },
 ).addTo(map);
+
+const markerGroup = L.layerGroup().addTo(map);
 
 const mainMarker = L.marker(
   BASIC_POSITION,
@@ -57,14 +60,20 @@ const createMarker = (point) => L.marker(
   },
 );
 
-const createMarkers = () => {
+const createMarkers = ((points) => {
+  markerGroup.clearLayers();
+  points.slice(0, 10).forEach((point) => {
+    createMarker(point)
+      .addTo(markerGroup)
+      .bindPopup(createAdElement(point));
+  });
+});
+
+const renderMarkers = () => {
   getData((points) => {
-    points.slice(0, 10).forEach((point) => {
-      createMarker(point)
-        .addTo(map)
-        .bindPopup(createAdElement(point));
-    });
+    createMarkers(points);
+    (filterForm(points, createMarkers));
   });
 };
 
-createMarkers();
+renderMarkers();

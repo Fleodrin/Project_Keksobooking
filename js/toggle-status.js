@@ -4,12 +4,12 @@ const form = document.querySelector('.ad-form');
 const formElements = form.children;
 
 const disableForm = () => {
-  filtersForm.classList.toggle('ad-form--disabled');
+  form.classList.toggle('ad-form--disabled');
   for (const formElement of formElements) {
     formElement.disabled = true;
   }
 
-  form.classList.toggle('ad-form--disabled');
+  filtersForm.classList.toggle('ad-form--disabled');
   for (const filtersFormElement of filtersFormElements) {
     filtersFormElement.disabled = true;
   }
