@@ -1,5 +1,5 @@
 import {debounce} from './util.js';
-import {getLocalData, MARKERS_COUNT} from './data.js';
+import {getLocalData, MAX_MARKERS_COUNT} from './data.js';
 import {renderMarkers} from './map.js';
 
 const PRICE = {
@@ -54,20 +54,22 @@ const filterAds = (ad) =>
   filterByGuest(ad) &&
   filterByFeature(ad);
 
-const onChangeFilters = () => {
+const changeFilters = () => {
   const markers = getLocalData();
   const filteredListAds = [];
 
   for (const marker of markers) {
     if (filterAds(marker)) {
       filteredListAds.push(marker);
-      if (filteredListAds.length >= MARKERS_COUNT) {
-        break;
-      }
+    }
+    if (filteredListAds.length >= MAX_MARKERS_COUNT) {
+      break;
     }
   }
 
   renderMarkers(filteredListAds);
 };
 
-filtersForm.addEventListener('change', debounce(onChangeFilters));
+const onChangeFilters = debounce(changeFilters);
+
+filtersForm.addEventListener('change', onChangeFilters);

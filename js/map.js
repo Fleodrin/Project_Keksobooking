@@ -1,8 +1,9 @@
-import {enableForm, filtersForm, filtersFormElements} from './toggle-status.js';
+import {enableForm} from './toggle-status.js';
 import {getData} from './api.js';
 import {createAdElement} from './element.js';
-import {BASIC_POSITION, setAddressValue} from './form.js';
+import {BASIC_POSITION, setAddressValue, filtersForm, filtersFormElements} from './form.js';
 import {getLocalDataMax, saveLocalData} from './data.js';
+import {showAlert} from './dialog.js';
 
 const mapFilters = document.querySelector('.map__filters');
 const mainPinIcon = L.icon({
@@ -51,6 +52,9 @@ map
     getData((points) => {
       saveLocalData(points);
       renderMarkers(getLocalDataMax());
+    }, () => {
+      showAlert('Не удалось получить данные с сервера.');
+      disableMapFilters();
     });
     enableForm();
     setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
