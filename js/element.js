@@ -6,12 +6,12 @@ const HOUSE_TYPE = {
   hotel: 'Отель'
 };
 const advertisementTemplate = document.querySelector('#card').content.querySelector('.popup');
+const photoTemplate = document.querySelector('#card').content.querySelector('.popup__photo');
 
 export const createAdElement = ((ad) => {
   const adElement = advertisementTemplate.cloneNode(true);
   const featuresContainer = adElement.querySelector('.popup__features');
-  const photoTemplate = document.querySelector('#card').content.querySelector('.popup__photo');
-
+  adElement.querySelector('.popup__photos').innerHTML = '';
   adElement.querySelector('.popup__avatar').src = ad.author.avatar;
   adElement.querySelector('.popup__title').textContent = ad.offer.title;
   adElement.querySelector('.popup__text--address').textContent = ad.offer.address;
@@ -19,6 +19,8 @@ export const createAdElement = ((ad) => {
   adElement.querySelector('.popup__type').textContent = HOUSE_TYPE[ad.offer.type];
   adElement.querySelector('.popup__text--capacity').textContent = `${ad.offer.rooms} комнаты для ${ad.offer.guests} гостей`;
   adElement.querySelector('.popup__text--time').textContent = `Заезд после ${ad.offer.checkin}, выезд до ${ad.offer.checkout}`;
+  const elementDescription = adElement.querySelector('.popup__description');
+  const elementPhoto = adElement.querySelector('.popup__photos');
 
   if (ad.offer.features) {
     ad.offer.features.forEach((i) => {
@@ -31,20 +33,19 @@ export const createAdElement = ((ad) => {
   }
 
   if (ad.offer.description) {
-    adElement.querySelector('.popup__description').textContent = ad.offer.description;
+    elementDescription.textContent = ad.offer.description;
   } else {
-    adElement.querySelector('.popup__description').remove();
+    elementDescription.remove();
   }
 
   if (ad.offer.photos) {
-    adElement.querySelector('.popup__photos').innerHTML = '';
     ad.offer.photos.forEach((photo) => {
       const photoTemplateElement = photoTemplate.cloneNode(true);
       photoTemplateElement.src = photo;
-      adElement.querySelector('.popup__photos').append(photoTemplateElement);
+      elementPhoto.append(photoTemplateElement);
     });
   } else {
-    adElement.querySelector('.popup__photos').remove();
+    elementPhoto.remove();
   }
 
   return adElement;

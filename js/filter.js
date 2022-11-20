@@ -1,4 +1,6 @@
 import {debounce} from './util.js';
+import {getLocalData, MARKERS_COUNT} from './data.js';
+import {renderMarkers} from './map.js';
 
 const PRICE = {
   low: {
@@ -22,20 +24,21 @@ const fieldRoom = filtersForm.querySelector('#housing-rooms');
 const fieldGuest = filtersForm.querySelector('#housing-guests');
 const fieldFeatures = filtersForm.querySelector('#housing-features');
 
-const filterType = ({offer}) => fieldType.value === 'any' ||
+const filterByType = ({offer}) => fieldType.value === 'any' ||
   offer.type === fieldType.value;
 
-const filterPrice = ({offer}) => fieldPrice.value === 'any' ||
+const filterByPrice = ({offer}) => fieldPrice.value === 'any' ||
   (PRICE[fieldPrice.value].min <= offer.price && PRICE[fieldPrice.value].max) >= offer.price;
 
-const filterRoom = ({offer}) => fieldRoom.value === 'any' ||
+const filterByRoom = ({offer}) => fieldRoom.value === 'any' ||
   offer.rooms === +fieldRoom.value;
 
-const filterGuest = ({offer}) => fieldGuest.value === 'any' ||
-  offer.rooms === +fieldGuest.value;
+const filterByGuest = ({offer}) => fieldGuest.value === 'any' ||
+  offer.guests === +fieldGuest.value;
 
-const filterFeature = ({offer}) => {
+const filterByFeature = ({offer}) => {
   const checkedFilters = fieldFeatures.querySelectorAll('input:checked');
+
   if (offer.features) {
     return Array.from(checkedFilters).every((feature) =>
       offer.features.includes(feature.value));
@@ -45,19 +48,26 @@ const filterFeature = ({offer}) => {
 };
 
 const filterAds = (ad) =>
-  filterType(ad) &&
-  filterPrice(ad) &&
-  filterRoom(ad) &&
-  filterGuest(ad) &&
-  filterFeature(ad);
+  filterByType(ad) &&
+  filterByPrice(ad) &&
+  filterByRoom(ad) &&
+  filterByGuest(ad) &&
+  filterByFeature(ad);
 
-export const filterForm = (points, cb) => {
-  const onChangeFilters = (markers) => () => {
-    const filteredListAds = markers.slice()
-      .filter(filterAds);
+const onChangeFilters = () => {
+  const markers = getLocalData();
+  const filteredListAds = [];
 
-    cb(filteredListAds);
-  };
+  for (const marker of markers) {
+    if (filterAds(marker)) {
+      filteredListAds.push(marker);
+      if (filteredListAds.length >= MARKERS_COUNT) {
+        break;
+      }
+    }
+  }
 
-  filtersForm.addEventListener('change', debounce(onChangeFilters(points)));
+  renderMarkers(filteredListAds);
 };
+
+filtersForm.addEventListener('change', debounce(onChangeFilters));

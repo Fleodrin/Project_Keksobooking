@@ -1,7 +1,7 @@
-const filtersForm = document.querySelector('.map__filters');
-const filtersFormElements = filtersForm.children;
-const form = document.querySelector('.ad-form');
-const formElements = form.children;
+export const filtersForm = document.querySelector('.map__filters');
+export const filtersFormElements = filtersForm.children;
+export const form = document.querySelector('.ad-form');
+export const formElements = form.children;
 
 const disableForm = () => {
   form.classList.toggle('ad-form--disabled');

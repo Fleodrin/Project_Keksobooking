@@ -1,6 +1,8 @@
-import {resetMap} from './map.js';
-import {sendData} from './api.js';
-import {showSuccess, showError} from './util.js';
+import {renderMarkers, resetMap} from './map.js';
+import {getData, sendData} from './api.js';
+import {showSuccess, showError} from './dialog.js';
+import {form, filtersForm} from './toggle-status.js';
+import {getLocalDataMax, saveLocalData} from './data.js';
 
 export const BASIC_POSITION = {
   lat: 35.68172,
@@ -17,15 +19,16 @@ const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const SLIDER_PRICE_START = 1000;
 
-const form = document.querySelector('.ad-form');
+const fieldAddress = form.querySelector('#address');
 const fieldPrice = form.querySelector('#price');
 const fieldType = form.querySelector('#type');
 const fieldRoomNumber = form.querySelector('#room_number');
 const fieldGuestNumber = form.querySelector('#capacity');
+const fieldTimein = form.querySelector('#timein');
+const fieldTimeout = form.querySelector('#timeout');
 const slider = form.querySelector('.ad-form__slider');
 const submitButton = form.querySelector('.ad-form__submit');
 const resetButton = form.querySelector('.ad-form__reset');
-const fieldAddress = form.querySelector('#address');
 
 const pristine = new Pristine(form, {
   classTo: 'ad-form__element',
@@ -108,13 +111,26 @@ resetButton.addEventListener('click', (evt) => {
   evt.preventDefault();
   resetMap();
   form.reset();
+  filtersForm.reset();
   setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
   slider.noUiSlider.updateOptions({
     start: SLIDER_PRICE_START,
   });
+  getData((points) => {
+    saveLocalData(points);
+    renderMarkers(getLocalDataMax());
+  });
 });
 
 fieldGuestNumber.addEventListener('change', () => pristine.validate(fieldRoomNumber));
+
+fieldTimein.addEventListener('change', () => {
+  fieldTimeout.value = fieldTimein.value;
+});
+
+fieldTimeout.addEventListener('change', () => {
+  fieldTimein.value = fieldTimeout.value;
+});
 
 form.addEventListener('submit', (evt) => {
   evt.preventDefault();
@@ -139,6 +155,7 @@ form.addEventListener('submit', (evt) => {
       () => {
         resetMap();
         form.reset();
+        filtersForm.reset();
         setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
         slider.noUiSlider.updateOptions({
           start: SLIDER_PRICE_START,
