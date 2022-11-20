@@ -1,8 +1,10 @@
-import {enableForm} from './toggle-status.js';
-import {listAd} from './data.js';
+import {enableForm, filtersForm, filtersFormElements} from './toggle-status.js';
+import {getData} from './api.js';
 import {createAdElement} from './element.js';
 import {BASIC_POSITION, setAddressValue} from './form.js';
+import {getLocalDataMax, saveLocalData} from './data.js';
 
+const mapFilters = document.querySelector('.map__filters');
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
   iconSize: [52, 52],
@@ -14,8 +16,42 @@ const pinIcon = L.icon({
   iconAnchor: [20, 40],
 });
 
-const map = L.map('map-canvas')
+export const disableMapFilters = () => {
+  mapFilters.disabled = true;
+  filtersForm.classList.toggle('ad-form--disabled');
+  for (const filtersFormElement of filtersFormElements) {
+    filtersFormElement.disabled = true;
+  }
+};
+
+const createMarker = (point) => L.marker(
+  {
+    lat: point.location.lat,
+    lng: point.location.lng,
+  },
+  {
+    icon: pinIcon,
+  },
+);
+
+const map = L.map('map-canvas');
+const markerGroup = L.layerGroup().addTo(map);
+
+export const renderMarkers = (points) => {
+  markerGroup.clearLayers();
+  points.forEach((point) => {
+    createMarker(point)
+      .addTo(markerGroup)
+      .bindPopup(createAdElement(point));
+  });
+};
+
+map
   .on('load', () => {
+    getData((points) => {
+      saveLocalData(points);
+      renderMarkers(getLocalDataMax());
+    });
     enableForm();
     setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
   })
@@ -46,23 +82,3 @@ export const resetMap = () => {
   mainMarker.setLatLng(BASIC_POSITION);
   map.setView(BASIC_POSITION, 12);
 };
-
-const createMarker = (point) => L.marker(
-  {
-    lat: point.location.lat,
-    lng: point.location.lng,
-  },
-  {
-    icon: pinIcon,
-  },
-);
-
-const createMarkers = (points = listAd()) => {
-  points.forEach((point) => {
-    createMarker(point)
-      .addTo(map)
-      .bindPopup(createAdElement(point));
-  });
-};
-
-createMarkers();
