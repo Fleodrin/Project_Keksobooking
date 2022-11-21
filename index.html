@@ -78,7 +78,7 @@
           <legend class="ad-form-header__title">Ваша фотография (для карты)</legend>
           <div class="ad-form-header__upload">
             <div class="ad-form-header__preview">
-              <img src="img/muffin-grey.svg" alt="Аватар пользователя" width="40" height="44">
+              <img class="avatar-image" src="img/muffin-grey.svg" alt="Аватар пользователя" width="40" height="44">
             </div>
             <div class="ad-form__field">
               <input type="file" id="avatar" name="avatar" class="ad-form-header__input visually-hidden" required>
@@ -167,7 +167,9 @@
               <input type="file" id="images" name="images" class="ad-form__input visually-hidden">
               <label for="images" class="ad-form__drop-zone">Загрузить<br>фото...</label>
             </div>
-            <div class="ad-form__photo"></div>
+            <div class="ad-form__photo ad-form-header__preview">
+              <img class="avatar-photos" src="img/muffin-grey.svg" alt="Фото жилья" width="40" height="44">
+            </div>
           </div>
         </fieldset>
         <fieldset class="ad-form__element ad-form__element--submit">
