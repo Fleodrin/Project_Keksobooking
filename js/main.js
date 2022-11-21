@@ -4,3 +4,4 @@ import './api.js';
 import './form.js';
 import './filter.js';
 import './element.js';
+import './photo.js';
