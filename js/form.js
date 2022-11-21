@@ -1,8 +1,7 @@
 import {renderMarkers, resetMap} from './map.js';
-import {getData, sendData} from './api.js';
+import {sendData} from './api.js';
 import {showSuccess, showError} from './dialog.js';
-import {form, filtersForm} from './toggle-status.js';
-import {getLocalDataMax, saveLocalData} from './data.js';
+import {getLocalDataMax} from './data.js';
 
 export const BASIC_POSITION = {
   lat: 35.68172,
@@ -19,6 +18,8 @@ const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const SLIDER_PRICE_START = 1000;
 
+const form = document.querySelector('.ad-form');
+export const filtersForm = document.querySelector('.map__filters');
 const fieldAddress = form.querySelector('#address');
 const fieldPrice = form.querySelector('#price');
 const fieldType = form.querySelector('#type');
@@ -75,6 +76,16 @@ const validateRoomNumber = () => {
   }
 };
 
+const resetForm = () => {
+  resetMap();
+  form.reset();
+  filtersForm.reset();
+  setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
+  slider.noUiSlider.updateOptions({
+    start: SLIDER_PRICE_START,
+  });
+};
+
 pristine.addValidator(
   form.querySelector('#title'),
   validateTitle,
@@ -109,17 +120,8 @@ slider.noUiSlider.on('slide', () => {
 
 resetButton.addEventListener('click', (evt) => {
   evt.preventDefault();
-  resetMap();
-  form.reset();
-  filtersForm.reset();
-  setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
-  slider.noUiSlider.updateOptions({
-    start: SLIDER_PRICE_START,
-  });
-  getData((points) => {
-    saveLocalData(points);
-    renderMarkers(getLocalDataMax());
-  });
+  resetForm();
+  renderMarkers(getLocalDataMax());
 });
 
 fieldGuestNumber.addEventListener('change', () => pristine.validate(fieldRoomNumber));
@@ -147,27 +149,25 @@ const unblockSubmitButton = () => {
   submitButton.textContent = 'Опубликовать';
 };
 
+const sendSuccess = () => {
+  resetForm();
+  showSuccess();
+  unblockSubmitButton();
+};
+
+const sendError = () => {
+  showError();
+  unblockSubmitButton();
+};
+
 form.addEventListener('submit', (evt) => {
   evt.preventDefault();
   if (pristine.validate()) {
     blockSubmitButton();
-    sendData(
-      () => {
-        resetMap();
-        form.reset();
-        filtersForm.reset();
-        setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
-        slider.noUiSlider.updateOptions({
-          start: SLIDER_PRICE_START,
-        });
-        showSuccess();
-        unblockSubmitButton();
-      },
-      () => {
-        showError();
-        unblockSubmitButton();
-      },
-      new FormData(evt.target),
+    sendData(sendSuccess, sendError, new FormData(evt.target),
     );
   }
 });
+
+export class filtersFormElements {
+}

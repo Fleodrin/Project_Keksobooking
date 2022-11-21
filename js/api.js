@@ -1,24 +1,20 @@
-import {showAlert} from './dialog.js';
-import {disableMapFilters} from './map.js';
+const GET_DATA_URL = 'https://27.javascript.pages.academy/keksobooking/data';
+const SAVE_DATA_URL = 'https://27.javascript.pages.academy/keksobooking';
 
-const DATA_GET = 'https://27.javascript.pages.academy/keksobooking/data';
-const DARA_SEND = 'https://27.javascript.pages.academy/keksobooking';
-
-export const getData = (onSuccess) => {
-  fetch(DATA_GET)
+export const getData = (onSuccess, onFail) => {
+  fetch(GET_DATA_URL)
     .then((response) => response.json())
     .then((ads) => {
       onSuccess(ads);
     })
     .catch(() => {
-      disableMapFilters();
-      showAlert('Не удалось получить данные с сервера.');
+      onFail();
     });
 };
 
 export const sendData = (onSuccess, onFail, body) => {
   fetch(
-    DARA_SEND,
+    SAVE_DATA_URL,
     {
       method: 'POST',
       body,
