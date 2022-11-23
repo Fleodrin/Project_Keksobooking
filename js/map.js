@@ -5,6 +5,8 @@ import {BASIC_POSITION, setAddressValue, filtersForm, filtersFormElements} from 
 import {getLocalDataMax, saveLocalData} from './data.js';
 import {showAlert} from './dialog.js';
 
+const MAP_ZOOM = 12;
+
 const mapFilters = document.querySelector('.map__filters');
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
@@ -59,7 +61,7 @@ map
     enableForm();
     setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
   })
-  .setView(BASIC_POSITION, 12);
+  .setView(BASIC_POSITION, MAP_ZOOM);
 
 L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -84,5 +86,5 @@ mainMarker.addTo(map);
 
 export const resetMap = () => {
   mainMarker.setLatLng(BASIC_POSITION);
-  map.setView(BASIC_POSITION, 12);
+  map.setView(BASIC_POSITION, MAP_ZOOM);
 };
