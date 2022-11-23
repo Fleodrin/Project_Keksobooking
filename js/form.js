@@ -82,6 +82,7 @@ const resetForm = () => {
   resetMap();
   form.reset();
   filtersForm.reset();
+  renderMarkers(getLocalDataMax());
   setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
   slider.noUiSlider.updateOptions({
     start: SLIDER_PRICE_START,
@@ -125,7 +126,6 @@ slider.noUiSlider.on('slide', () => {
 resetButton.addEventListener('click', (evt) => {
   evt.preventDefault();
   resetForm();
-  renderMarkers(getLocalDataMax());
 });
 
 fieldGuestNumber.addEventListener('change', () => pristine.validate(fieldRoomNumber));
