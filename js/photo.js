@@ -1,9 +1,10 @@
 const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 const avatarChooser = document.querySelector('#avatar');
-const avatarPreview = document.querySelector('.avatar-image');
+export const avatarPreview = document.querySelector('.avatar-image');
 const photoChooser = document.querySelector('#images');
-const photoPreview = document.querySelector('.avatar-photos');
+const cloneAvatar = avatarPreview.cloneNode(false);
+export const photoPreviewContainer = document.querySelector('.ad-form__photo');
 
 const fileChooser = (file, preview) => {
   file.addEventListener('change', () => {
@@ -18,5 +19,26 @@ const fileChooser = (file, preview) => {
   });
 };
 
+const clonePhoto = (clone, preview) => {
+  preview.appendChild(clone);
+  clone.alt = 'Фото квартиры';
+  clone.classList.remove('avatar-image');
+  clone.classList.add('form-photo');
+};
+
+const createPhoto = (file, clone, preview) => {
+  photoChooser.addEventListener('change', () => {
+    clonePhoto(clone, preview);
+    const avatarFile = file.files[0];
+    const avatarFileName = avatarFile.name.toLowerCase();
+
+    const avatarMatches = FILE_TYPES.some((it) => avatarFileName.endsWith(it));
+
+    if (avatarMatches) {
+      clone.src = URL.createObjectURL(avatarFile);
+    }
+  });
+};
+
 fileChooser(avatarChooser, avatarPreview);
-fileChooser(photoChooser, photoPreview);
+createPhoto(photoChooser, cloneAvatar, photoPreviewContainer);

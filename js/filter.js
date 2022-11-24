@@ -38,13 +38,16 @@ const filterByGuest = ({offer}) => fieldGuest.value === 'any' ||
 
 const filterByFeature = ({offer}) => {
   const checkedFilters = fieldFeatures.querySelectorAll('input:checked');
+  return Array.from(checkedFilters).every((feature) => {
+    if (!checkedFilters) {
+      return true;
+    }
+    if (!offer.features) {
+      return false;
+    }
 
-  if (offer.features) {
-    return Array.from(checkedFilters).every((feature) =>
-      offer.features.includes(feature.value));
-  }
-
-  return false;
+    return offer.features.includes(feature.value);
+  });
 };
 
 const filterAds = (ad) =>

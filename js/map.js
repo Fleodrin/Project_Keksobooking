@@ -1,13 +1,12 @@
-import {enableForm} from './toggle-status.js';
+import {disableFiltersForm, enableForm} from './toggle-status.js';
 import {getData} from './api.js';
 import {createAdElement} from './element.js';
-import {BASIC_POSITION, setAddressValue, filtersForm, filtersFormElements} from './form.js';
+import {BASIC_POSITION, setAddressValue, filtersForm} from './form.js';
 import {getLocalDataMax, saveLocalData} from './data.js';
 import {showAlert} from './dialog.js';
 
 const MAP_ZOOM = 12;
 
-const mapFilters = document.querySelector('.map__filters');
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
   iconSize: [52, 52],
@@ -20,11 +19,8 @@ const pinIcon = L.icon({
 });
 
 export const disableMapFilters = () => {
-  mapFilters.disabled = true;
-  filtersForm.classList.toggle('ad-form--disabled');
-  for (const filtersFormElement of filtersFormElements) {
-    filtersFormElement.disabled = true;
-  }
+  disableFiltersForm();
+  filtersForm.classList.add('ad-form--disabled');
 };
 
 const createMarker = (point) => L.marker(
@@ -52,13 +48,14 @@ export const renderMarkers = (points) => {
 map
   .on('load', () => {
     getData((points) => {
+      enableForm();
       saveLocalData(points);
       renderMarkers(getLocalDataMax());
     }, () => {
       showAlert('Не удалось получить данные с сервера.');
+      enableForm();
       disableMapFilters();
     });
-    enableForm();
     setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
   })
   .setView(BASIC_POSITION, MAP_ZOOM);

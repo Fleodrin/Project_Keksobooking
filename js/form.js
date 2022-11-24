@@ -2,6 +2,7 @@ import {renderMarkers, resetMap} from './map.js';
 import {sendData} from './api.js';
 import {showSuccess, showError} from './dialog.js';
 import {getLocalDataMax} from './data.js';
+import {avatarPreview, photoPreviewContainer} from './photo.js';
 
 export const BASIC_POSITION = {
   lat: 35.68172,
@@ -89,6 +90,8 @@ const resetForm = () => {
   });
   pristine.reset();
   fieldPrice.placeholder = HOUSE_TYPE[fieldType.value];
+  avatarPreview.src = 'img/muffin-grey.svg';
+  photoPreviewContainer.innerHTML = '';
 };
 
 pristine.addValidator(

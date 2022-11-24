@@ -1,4 +1,4 @@
-const GET_DATA_URL = 'https://27.javascript.pages.academy/keksobooking/data';
+const GET_DATA_URL = 'https://27.javascript.pages.academy/keksobooking';
 const SAVE_DATA_URL = 'https://27.javascript.pages.academy/keksobooking';
 
 export const getData = (onSuccess, onFail) => {
