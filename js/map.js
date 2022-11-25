@@ -1,7 +1,7 @@
-import {disableFiltersForm, enableForm} from './toggle-status.js';
+import {enableAdForm, enableForm} from './toggle-status.js';
 import {getData} from './api.js';
 import {createAdElement} from './element.js';
-import {BASIC_POSITION, setAddressValue, filtersForm} from './form.js';
+import {BASIC_POSITION, setAddressValue} from './form.js';
 import {getLocalDataMax, saveLocalData} from './data.js';
 import {showAlert} from './dialog.js';
 
@@ -17,11 +17,6 @@ const pinIcon = L.icon({
   iconSize: [40, 40],
   iconAnchor: [20, 40],
 });
-
-export const disableMapFilters = () => {
-  disableFiltersForm();
-  filtersForm.classList.add('ad-form--disabled');
-};
 
 const createMarker = (point) => L.marker(
   {
@@ -53,8 +48,7 @@ map
       renderMarkers(getLocalDataMax());
     }, () => {
       showAlert('Не удалось получить данные с сервера.');
-      enableForm();
-      disableMapFilters();
+      enableAdForm();
     });
     setAddressValue(BASIC_POSITION.lat, BASIC_POSITION.lng);
   })

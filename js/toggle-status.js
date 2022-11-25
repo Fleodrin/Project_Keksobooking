@@ -17,9 +17,9 @@ const disableForm = () => {
   toggleElements(filtersFormElements, true);
 };
 
-export const disableFiltersForm = () => {
-  filtersForm.classList.toggle('ad-form--disabled');
-  toggleElements(filtersFormElements, true);
+export const enableAdForm = () => {
+  form.classList.toggle('ad-form--disabled');
+  toggleElements(formElements, false);
 };
 
 export const enableForm = () => {
